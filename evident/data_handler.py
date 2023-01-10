@@ -17,6 +17,8 @@ from .stats import (calculate_cohens_d, calculate_cohens_f,
                     calculate_rm_anova_power)
 from .utils import _listify, _check_sample_overlap
 
+SUPP_TYPES = [np.dtype("object"), np.dtype("bool")]
+
 
 class _BaseDataHandler(ABC):
     """Abstract class for handling data and metadata."""
@@ -48,7 +50,7 @@ class _BaseDataHandler(ABC):
         warn_msg_level_count = False
         for col in cat_columns:
             # Drop non-categorical columns
-            if metadata[col].dtype != np.dtype("object"):
+            if metadata[col].dtype not in SUPP_TYPES:
                 cols_to_drop.append(col)
                 continue
 
@@ -120,7 +122,7 @@ class _BaseDataHandler(ABC):
         :returns: Effect size
         :rtype: evident.results.EffectSizeResult
         """
-        if self.metadata[column].dtype != np.dtype("object"):
+        if self.metadata[column].dtype not in SUPP_TYPES:
             raise exc.NonCategoricalColumnError(self.metadata[column])
 
         column_choices = self.metadata[column].dropna().unique()
@@ -353,7 +355,7 @@ class _BaseDataHandler(ABC):
         :returns: Stem of power function based on chosen column
         :rtype: partial function
         """
-        if self.metadata[column].dtype != np.dtype("object"):
+        if self.metadata[column].dtype not in SUPP_TYPES:
             raise exc.NonCategoricalColumnError(self.metadata[column])
 
         column_choices = self.metadata[column].dropna().unique()

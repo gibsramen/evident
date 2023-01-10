@@ -91,6 +91,16 @@ class TestAlphaDiv:
         assert exp_warn_msg_1 == warn_msg_1
         assert exp_warn_msg_2 == warn_msg_2
 
+    def test_bool(self, alpha_mock):
+        data = alpha_mock.data
+        md = alpha_mock.metadata
+        md["classification_bool"] = md["classification"] == "B1"
+
+        adh = UnivariateDataHandler(data, md)
+        es1 = adh.calculate_effect_size("classification")
+        es2 = adh.calculate_effect_size("classification_bool")
+        assert es1.effect_size == es2.effect_size
+
 
 class TestBetaDiv:
     def test_init_beta_div_handler(self):
